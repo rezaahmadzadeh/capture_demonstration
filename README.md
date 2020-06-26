@@ -1,4 +1,4 @@
-# capture_demonstration
+# Capture Demonstration from Pointer Devices
 Capture trajectory demonstrations from a pointer device
 
 ## How to use
