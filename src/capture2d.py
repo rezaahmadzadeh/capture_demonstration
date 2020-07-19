@@ -18,13 +18,9 @@ Author: Reza Ahmadzadeh, 2020
 -----------------------------------
 '''
 
-
-
-
-
 import numpy as np
 import pygame 
-from scipy.interpolate import interp1d
+from scipy.interpolate import interp1d, InterpolatedUnivariateSpline
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
 
@@ -37,6 +33,7 @@ bgColor = pygame.Color("White")
 fgColor = pygame.Color("Black")
 X = []
 Y = []
+Np = 100 # number of points to be resampled uniformly
 
 
 def save_data(X,Y):
@@ -57,19 +54,24 @@ def save_data(X,Y):
     
 def draw_result(X,Y):
     print("Data can be saved after closing the plot.")
+    print("Number of resampling points: "+str(Np))
     t = np.linspace(0,1,len(X))
+    tt = np.linspace(0,1,Np)
     print(len(t))
     fx = interp1d(t,np.array(X), kind = 'cubic')
     fy = interp1d(t,np.array(Y), kind = 'cubic')
+    fxu = InterpolatedUnivariateSpline(t, np.array(X))
+    fyu = InterpolatedUnivariateSpline(t, np.array(Y))
     plt.figure()
     plt.gca().invert_yaxis()
     plt.plot(X,Y,'.--',label="demonstration")
-    plt.plot(fx(t),fy(t),label="smoothed")
+    plt.plot(fx(tt),fy(tt),label="1D Interpolate")
+    plt.plot(fxu(tt),fyu(tt),label="Univariate Spline")
     plt.title("captured raw and smoothed demonstration")
     plt.xlabel("x")
     plt.ylabel("inverted y")
     plt.show()
-    save_data(fx(t),fy(t))
+    save_data(fx(tt),fy(tt))
 
 def main():
     pygame.init()
